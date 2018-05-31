@@ -1,9 +1,6 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException
-
 from fixture.session import SessionHelper
-from fixture.group import GroupHelper
-from fixture.contact import ContactHelper
 
 
 class Application:
@@ -20,9 +17,7 @@ class Application:
         else:
             raise ValueError('I don\'t know this browser - {}'.format(browser))
         self.session = SessionHelper(self)
-        self.group = GroupHelper(self)
-        self.contact = ContactHelper(self)
-        self.homepage = url
+        self.homepage = 'http://localhost'
 
     def is_valid(self):
         try:
@@ -38,8 +33,7 @@ class Application:
             pass
 
     def open_homepage(self):
-        if not (self.wd.current_url == self.homepage):
-            self.wd.get(self.homepage)
+        self.wd.get(self.homepage)
 
     def complete(self):
         self.wd.quit()

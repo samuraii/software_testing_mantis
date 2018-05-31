@@ -6,12 +6,12 @@ class SessionHelper:
     def login(self, username, password):
         wd = self.app.wd
         self.app.open_homepage()
-        wd.find_element_by_name("user").click()
-        wd.find_element_by_name("user").clear()
-        wd.find_element_by_name("user").send_keys(username)
-        wd.find_element_by_name("pass").click()
-        wd.find_element_by_name("pass").clear()
-        wd.find_element_by_name("pass").send_keys(password)
+        wd.find_element_by_name("username").click()
+        wd.find_element_by_name("username").clear()
+        wd.find_element_by_name("username").send_keys(username)
+        wd.find_element_by_name("password").click()
+        wd.find_element_by_name("password").clear()
+        wd.find_element_by_name("password").send_keys(password)
         wd.find_element_by_css_selector('input[type="submit"]').click()
 
     def logout(self):
@@ -25,7 +25,7 @@ class SessionHelper:
 
     def get_logged_user(self):
         wd = self.app.wd
-        return wd.find_element_by_xpath('//div/div[1]/form/b').text[1:-1]
+        return wd.find_element_by_css_selector('td.login-info-left span.italic').text
 
     def ensure_logout(self):
         if self.is_logged_in():
