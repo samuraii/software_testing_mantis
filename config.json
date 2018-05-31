@@ -1,0 +1,9 @@
+{
+  "web": {
+    "url": "http://localhost/"
+  }, 
+  "webadmin":{
+    "username": "administrator", 
+    "password": "root"
+  }
+}
