@@ -2,7 +2,7 @@
   "web": {
     "url": "http://localhost/"
   }, 
-  "webadmin":{
+  "admin":{
     "username": "administrator", 
     "password": "root"
   }

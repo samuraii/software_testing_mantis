@@ -5,6 +5,3 @@ py==1.5.3
 pytest==3.5.0
 selenium==3.11.0
 six==1.11.0
-PyMYSQL==0.8.1
-pony==0.7.3
-jsonpickle==0.9.6

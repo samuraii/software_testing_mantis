@@ -1,11 +1,7 @@
 import pytest
 import json
 import os.path
-import importlib
-import jsonpickle
-from fixture.session import SessionHelper
 from fixture.application import Application
-
 
 fixture = None
 config = None
@@ -25,13 +21,15 @@ def load_config(file):
             config = json.load(config_file)
     return config
 
+
 @pytest.fixture
 def app(request):
     global fixture
     browser = pytest.config.getoption('--browser')
-    web_config = load_config(pytest.config.getoption('--config'))['web']
+    web_config = load_config(pytest.config.getoption('--config'))
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, url=web_config['url'])
+        fixture = Application(browser=browser, url=web_config['web']['url'])
+    fixture.session.ensure_login(web_config['admin']['username'], web_config['admin']['password'])
     return fixture
 
 

@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.common.exceptions import NoAlertPresentException
 from fixture.session import SessionHelper
+from fixture.project import ProjectHelper
 
 
 class Application:
@@ -17,7 +18,8 @@ class Application:
         else:
             raise ValueError('I don\'t know this browser - {}'.format(browser))
         self.session = SessionHelper(self)
-        self.homepage = 'http://localhost'
+        self.project = ProjectHelper(self)
+        self.homepage = url
 
     def is_valid(self):
         try:
