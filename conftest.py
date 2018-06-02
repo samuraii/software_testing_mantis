@@ -1,6 +1,7 @@
 import pytest
 import json
 import os.path
+import ftputil
 from fixture.application import Application
 
 fixture = None
@@ -22,14 +23,44 @@ def load_config(file):
     return config
 
 
+@pytest.fixture(scope='session')
+def configuration(request):
+    return load_config(request.config.getoption('--config'))
+
+
+@pytest.fixture(scope='session', autouse=True)
+def configure_server(request, configuration):
+    install_server_configuration(configuration['ftp']['host'], configuration['ftp']['username'], configuration['ftp']['password'])
+    def fin():
+        restore_server_configuration(configuration['ftp']['host'], configuration['ftp']['username'], configuration['ftp']['password'])
+    request.addfinalizer(fin)
+
+
+def install_server_configuration(host, username, password):
+    with ftputil.FTPHost(host, username, password) as remote:
+        if remote.path.isfile('config_inc.php.bak'):
+            remote.remove('config_inc.php.bak')
+        if remote.path.isfile('config_inc.php'):
+            remote.rename('config_inc.php', 'config_inc.php.bak')
+        remote.upload(os.path.join(os.path.dirname(__file__),'resources/config_inc.php'), 'config_inc.php')
+
+
+def restore_server_configuration(host, username, password):
+    with ftputil.FTPHost(host, username, password) as remote:
+        if remote.path.isfile('config_inc.php'):
+            remote.remove('config_inc.php')
+        if remote.path.isfile('config_inc.php.bak'):
+            remote.rename('config_inc.php.bak', 'config_inc.php')
+        remote.upload(os.path.join(os.path.dirname(__file__),'resources/config_inc.php'), 'config_inc.php')
+
+
 @pytest.fixture
-def app(request):
+def app(request, configuration):
     global fixture
-    browser = pytest.config.getoption('--browser')
-    web_config = load_config(pytest.config.getoption('--config'))
+    browser = request.config.getoption('--browser')
     if fixture is None or not fixture.is_valid():
-        fixture = Application(browser=browser, url=web_config['web']['url'])
-    fixture.session.ensure_login(web_config['admin']['username'], web_config['admin']['password'])
+        fixture = Application(browser=browser, configuration=configuration)
+    fixture.session.ensure_login(configuration['admin']['username'], configuration['admin']['password'])
     return fixture
 
 
