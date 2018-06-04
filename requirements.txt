@@ -10,3 +10,4 @@ PyMySQL==0.8.1
 pytest==3.5.0
 selenium==3.11.0
 six==1.11.0
+suds-jurko==0.6

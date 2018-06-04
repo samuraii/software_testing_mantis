@@ -9,10 +9,16 @@ def random_string(max_len=5):
 def test_create_project(app):
     app.project.open_projects_page()
     before_add_project = app.project.count()
-    projects = app.project.get_projects_list()
+    admin_config = app.config['admin']
     project_to_create = Project(name=random_string(5))
-    if project_to_create in projects:
+    while app.soap.project_exists(admin_config['username'], admin_config['password'], project_to_create.name):
         project_to_create = Project(name=random_string(5))
+
+    # projects = app.project.get_projects_list()
+    # project_to_create = Project(name=random_string(5))
+    # if project_to_create in projects:
+    #     project_to_create = Project(name=random_string(5))
+
     app.project.create(project_to_create)
     after_add_project = app.project.count()
     assert after_add_project - before_add_project == 1
