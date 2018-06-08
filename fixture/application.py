@@ -23,9 +23,9 @@ class Application:
         self.session = SessionHelper(self)
         self.project = ProjectHelper(self)
         self.homepage = configuration['web']['url']
-        self.james = JamesHelper(self)
+        # self.james = JamesHelper(self)
         self.config = configuration
-        self.signup = SignupHelper(self)
+        # self.signup = SignupHelper(self)
         self.soap = SoapHelper(self)
 
     def is_valid(self):
